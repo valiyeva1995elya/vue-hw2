@@ -3,28 +3,39 @@
 export default {
     data() {
         return {
-            tasks: [
-                {
-                    name: 'clean',
-                    
-                }
-            ],
-            name: " ",
+            tasks: [],
             counter: 0,
+            newText: "",
+            counter: 0,
+            doneTasks: [],
+            isEdit: false,
         }
     },
     methods: {
         addTask() {
-            const newTask = {
-                name: this.name,
+            if (this.newText == "") {
+                return
             }
+            let newTask = {
+                id: this.tasks.length + 1,
+                text: this.newText,
+                isDone: false
+            }
+
             this.tasks.push(newTask)
-            this.name = "";
+            this.newText = "";
+            console.log(this.tasks);
+            
 
         },
 
-        deleteTask(name) {
-            this.tasks = this.tasks.filter(task => task.name == this.name)
+        deleteTask(id) {
+            this.tasks = this.tasks.filter(task => task.id != id)
+        },
+        
+        hide() {
+            
+            
         }
 
     }
@@ -33,20 +44,23 @@ export default {
 
 <template>
     <div class="block-compl">
-        <p> {{ counter }} task(s) left!</p>
+        <div class="block">
+            <p> {{ counter }} task(s) left!</p>
+            <button @click="hide()">Hide Completed</button>
+        </div>
         <div class="add_task">
             <form @submit.prevent>
-                <input v-bind:value="name" @input="name = $event.target.value" type="text" class="input"
-                    placeholder="Add a new task">
+                <input v-bind:value="newText" @input="newText = $event.target.value" type="text" class="input" placeholder="Add a new task">
                 <button @click="addTask" class="btn">
                     Add
                 </button>
             </form>
         </div>
-        <div class="task" v-for="task in tasks">
-            <input type="checkbox">
-            <div>{{ task.name }}</div>
-            <button class="btn2" @click="deleteTask(name)">X</button>
+        <div class="task" v-for="task in tasks"  v-bind:class="{done: task.isEdit}">
+            <input type="checkbox" @change="task.isEdit = !task.isEdit">
+            <div>{{ task.text }}</div>
+            <button class="btn2" @click="deleteTask(task.id)">X</button>
+
         </div>
     </div>
 </template>
@@ -66,7 +80,16 @@ export default {
 .block-compl {
     margin: 25px;
 }
-
+.block{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+button{
+    background-color: black;
+    color: white;
+    border-radius: 5px;
+}
 .input {
     width: 95%;
     background-color: black;
@@ -74,5 +97,12 @@ export default {
     margin: 0 10px 20px 0;
     border-radius: 3px;
     color: white;
+}
+
+.done {
+    text-decoration: line-through;
+}
+.list{
+    display: none;
 }
 </style>
