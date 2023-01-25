@@ -9,6 +9,7 @@ export default {
             counter: 0,
             doneTasks: [],
             isEdit: false,
+            edit: [],
         }
     },
     methods: {
@@ -34,7 +35,8 @@ export default {
         },
         
         hide() {
-            
+            this.tasks = this.tasks.filter(task => task.isEdit != true)
+             
             
         }
 
@@ -46,7 +48,7 @@ export default {
     <div class="block-compl">
         <div class="block">
             <p> {{ counter }} task(s) left!</p>
-            <button @click="hide()">Hide Completed</button>
+            <button @click="hide()" >Hide Completed</button> 
         </div>
         <div class="add_task">
             <form @submit.prevent>
@@ -56,7 +58,7 @@ export default {
                 </button>
             </form>
         </div>
-        <div class="task" v-for="task in tasks"  v-bind:class="{done: task.isEdit}">
+        <div class="task" v-for="task in tasks" :class="{done: task.isEdit}">
             <input type="checkbox" @change="task.isEdit = !task.isEdit">
             <div>{{ task.text }}</div>
             <button class="btn2" @click="deleteTask(task.id)">X</button>
